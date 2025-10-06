@@ -3,88 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CryptoTrackr - Kripto Portföy Takip</title>
+  <title>CryptoHub - Kripto Portföy ve Fiyat Takip</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0f172a;
-      color: #f8fafc;
+      font-family: "Poppins", sans-serif;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      transition: background 0.3s, color 0.3s;
     }
     header {
-      background-color: #1e293b;
+      text-align: center;
       padding: 1rem;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
+      backdrop-filter: blur(10px);
+      background: rgba(30,41,59,0.8);
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
     }
     table {
-      margin: 2rem auto;
+      width: 100%;
       border-collapse: collapse;
-      width: 90%;
-      max-width: 800px;
+      margin-top: 1rem;
     }
     th, td {
       border: 1px solid #334155;
       padding: 0.75rem;
+      text-align: center;
     }
     th {
       background-color: #1e293b;
     }
-    tr:nth-child(even) {
-      background-color: #1e293b;
+    .up { color: #22c55e; }
+    .down { color: #ef4444; }
+    canvas {
+      background: #1e293b;
+      border-radius: 8px;
+      margin-top: 1rem;
     }
-    .up {
-      color: #22c55e;
+    .portfolio {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(30,41,59,0.8);
+      border-radius: 8px;
     }
-    .down {
-      color: #ef4444;
+    input {
+      padding: 0.5rem;
+      margin: 0.3rem;
+      width: 120px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .light {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .light header {
+      background: rgba(255,255,255,0.8);
+    }
+    .light th {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .light canvas {
+      background: #f1f5f9;
     }
   </style>
 </head>
 <body>
-  <header>📈 CryptoTrackr</header>
-  <p>Canlı kripto fiyatları (CoinGecko API)</p>
+  <header>
+    💹 CryptoHub
+    <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+  </header>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Coin</th>
-        <th>Fiyat (USD)</th>
-        <th>24s Değişim</th>
-      </tr>
-    </thead>
-    <tbody id="crypto-table">
-      <tr><td colspan="3">Veriler yükleniyor...</td></tr>
-    </tbody>
-  </table>
+  <div class="container">
+    <h2>Canlı Kripto Fiyatları</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Coin</th>
+          <th>Fiyat (USD)</th>
+          <th>Değişim (24s)</th>
+        </tr>
+      </thead>
+      <tbody id="crypto-table">
+        <tr><td colspan="3">Veriler yükleniyor...</td></tr>
+      </tbody>
+    </table>
+
+    <canvas id="chart" width="400" height="200"></canvas>
+
+    <div class="portfolio">
+      <h3>Portföy Hesaplama</h3>
+      <p>Kripto miktarını gir, toplam değeri anında hesapla:</p>
+      <div id="inputs"></div>
+      <button onclick="calcPortfolio()">Toplamı Hesapla</button>
+      <h4 id="total"></h4>
+    </div>
+  </div>
 
   <script>
+    const proxy = "https://api.allorigins.win/raw?url=";
+    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,binancecoin,dogecoin";
+    let prices = {};
+
     async function loadData() {
-      const proxy = 'https://api.allorigins.win/raw?url=';
-      const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,binancecoin,dogecoin';
       const res = await fetch(proxy + encodeURIComponent(url));
       const data = await res.json();
 
-      const tbody = document.getElementById('crypto-table');
-      tbody.innerHTML = '';
+      const tbody = document.getElementById("crypto-table");
+      tbody.innerHTML = "";
       data.forEach(coin => {
+        prices[coin.id] = coin.current_price;
         const change = coin.price_change_percentage_24h;
         const row = `
           <tr>
             <td>${coin.name}</td>
             <td>$${coin.current_price.toLocaleString()}</td>
-            <td class="${change >= 0 ? 'up' : 'down'}">
-              ${change.toFixed(2)}%
-            </td>
+            <td class="${change >= 0 ? "up" : "down"}">${change.toFixed(2)}%</td>
           </tr>`;
         tbody.innerHTML += row;
       });
+
+      drawChart(data);
+      renderInputs(data);
+    }
+
+    function drawChart(data) {
+      const ctx = document.getElementById("chart").getContext("2d");
+      const labels = data.map(c => c.name);
+      const values = data.map(c => c.current_price);
+      if (window.myChart) window.myChart.destroy();
+      window.myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Fiyat (USD)",
+            data: values,
+            backgroundColor: ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6"]
+          }]
+        },
+        options: { plugins: { legend: { display: false } } }
+      });
+    }
+
+    function renderInputs(data) {
+      const div = document.getElementById("inputs");
+      div.innerHTML = "";
+      data.forEach(c => {
+        div.innerHTML += `
+          <div>
+            <label>${c.name}: </label>
+            <input id="${c.id}" type="number" placeholder="Miktar">
+          </div>`;
+      });
+    }
+
+    function calcPortfolio() {
+      let total = 0;
+      for (let id in prices) {
+        const val = parseFloat(document.getElementById(id)?.value || 0);
+        total += val * prices[id];
+      }
+      document.getElementById("total").innerText = "Toplam Değer: $" + total.toFixed(2);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      const icon = document.querySelector(".theme-toggle");
+      icon.textContent = document.body.classList.contains("light") ? "🌞" : "🌙";
     }
 
     loadData();
-    setInterval(loadData, 60000); // her 60 saniyede bir yenile
+    setInterval(loadData, 60000);
   </script>
 </body>
 </html>
