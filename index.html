@@ -104,37 +104,37 @@
   </footer>
 
   <script>
-    async function loadCryptoData() {
-      const container = document.querySelector('.cards-grid');
-      container.innerHTML = '<p style="text-align:center;color:#666;">Veriler yükleniyor...</p>';
-      try {
-        const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano');
-        const data = await res.json();
+  async function loadCryptoData() {
+    const container = document.querySelector('.cards-grid');
+    container.innerHTML = '<p style="text-align:center;color:#666;">Veriler yükleniyor...</p>';
+    try {
+      const res = await fetch('https://corsproxy.io/?https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano');
+      const data = await res.json();
 
-        container.innerHTML = '';
-        data.forEach(c => {
-          const price = c.current_price;
-          const change = c.price_change_percentage_24h;
-          const positive = change >= 0;
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <div class="card-icon"><img src="${c.image}" width="40" height="40" style="border-radius:50%"></div>
-            <h3>${c.name} (${c.symbol.toUpperCase()})</h3>
-            <div class="price">$${price.toLocaleString()}</div>
-            <span class="change ${positive ? 'positive' : 'negative'}">
-              ${positive ? '+' : ''}${change.toFixed(2)}%
-            </span>
-          `;
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error(err);
-        container.innerHTML = '<p style="text-align:center;color:red;">Veri alınamadı. Yeniden deneyin.</p>';
-      }
+      container.innerHTML = '';
+      data.forEach(c => {
+        const price = c.current_price;
+        const change = c.price_change_percentage_24h;
+        const positive = change >= 0;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-icon"><img src="${c.image}" width="40" height="40" style="border-radius:50%"></div>
+          <h3>${c.name} (${c.symbol.toUpperCase()})</h3>
+          <div class="price">$${price.toLocaleString()}</div>
+          <span class="change ${positive ? 'positive' : 'negative'}">
+            ${positive ? '+' : ''}${change.toFixed(2)}%
+          </span>
+        `;
+        container.appendChild(card);
+      });
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = '<p style="text-align:center;color:red;">Veri alınamadı. Yeniden deneyin.</p>';
     }
+  }
 
-    window.addEventListener('DOMContentLoaded', loadCryptoData);
-  </script>
+  window.addEventListener('DOMContentLoaded', loadCryptoData);
+</script>
 </body>
 </html>
