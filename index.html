@@ -5,86 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CryptoHub - Kripto Para Dünyası</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #333; line-height: 1.6;
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#333; line-height:1.6;
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
+    .container { max-width:1200px; margin:0 auto; padding:0 20px; }
     header {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      position: sticky; top: 0; z-index: 1000;
+      background:rgba(255,255,255,0.95);
+      backdrop-filter:blur(10px);
+      box-shadow:0 4px 6px rgba(0,0,0,0.1);
+      position:sticky; top:0; z-index:1000;
     }
-    nav {
-      display: flex; justify-content: space-between;
-      align-items: center; padding: 1rem 0;
-    }
+    nav { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; }
     .logo {
-      font-size: 1.8rem; font-weight: bold;
-      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size:1.8rem; font-weight:bold;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
     .nav-links a {
-      text-decoration: none; color: #333; font-weight: 500;
-      transition: color 0.3s;
+      text-decoration:none; color:#333; font-weight:500; transition:color 0.3s;
     }
-    .nav-links a:hover { color: #667eea; }
-
-    .hero { text-align: center; padding: 5rem 0; color: white; }
-    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1.3rem; margin-bottom: 2rem; }
-
+    .nav-links a:hover { color:#667eea; }
+    .hero { text-align:center; padding:5rem 0; color:white; }
+    .hero h1 { font-size:3rem; margin-bottom:1rem; }
+    .hero p { font-size:1.3rem; margin-bottom:2rem; }
     .cta-button {
-      background: white; color: #667eea;
-      padding: 1rem 2.5rem; border: none; border-radius: 50px;
-      font-size: 1.1rem; font-weight: bold;
-      cursor: pointer; transition: 0.3s;
+      background:white; color:#667eea; padding:1rem 2.5rem;
+      border:none; border-radius:50px; font-size:1.1rem; font-weight:bold;
+      cursor:pointer; transition:0.3s;
     }
     .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      transform:translateY(-3px);
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
     }
-
-    .crypto-cards { background: white; padding: 4rem 0; }
+    .crypto-cards { background:white; padding:4rem 0; }
     .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem; margin-top: 2rem;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:2rem; margin-top:2rem;
     }
     .card {
-      background: linear-gradient(145deg, #f0f0f0, #ffffff);
-      border-radius: 15px; padding: 2rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      text-align: center;
+      background:linear-gradient(145deg,#f0f0f0,#ffffff);
+      border-radius:15px; padding:2rem;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      transition:transform 0.3s, box-shadow 0.3s;
+      text-align:center;
     }
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-    }
-    .card-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .card h3 { color: #667eea; margin-bottom: 0.5rem; }
-    .price {
-      font-size: 1.5rem; font-weight: bold;
-      color: #2ecc71; margin: 1rem 0;
-    }
-    .change {
-      padding: 0.3rem 0.8rem; border-radius: 20px;
-      font-size: 0.9rem; font-weight: bold;
-    }
-    .positive { background: #d4edda; color: #155724; }
-    .negative { background: #f8d7da; color: #721c24; }
-
-    footer {
-      background: #2c3e50; color: white;
-      text-align: center; padding: 2rem 0;
-    }
+    .card:hover { transform:translateY(-10px); box-shadow:0 15px 40px rgba(0,0,0,0.15); }
+    .card-icon { font-size:2rem; margin-bottom:0.5rem; }
+    .card h3 { color:#667eea; margin-bottom:0.5rem; }
+    .price { font-size:1.5rem; font-weight:bold; color:#2ecc71; margin:1rem 0; }
+    .change { padding:0.3rem 0.8rem; border-radius:20px; font-size:0.9rem; font-weight:bold; }
+    .positive { background:#d4edda; color:#155724; }
+    .negative { background:#f8d7da; color:#721c24; }
+    footer { background:#2c3e50; color:white; text-align:center; padding:2rem 0; }
   </style>
 </head>
 <body>
@@ -112,7 +88,53 @@
 
   <section class="crypto-cards" id="markets">
     <div class="container">
-      <h2 style="text-align:center; font-size:2.5rem; color:#667eea; margin-bottom:1rem;">Popüler Kripto Paralar</h2>
-      <p style="text-align:center; color:#666; margin-bottom:2rem;">Gerçek zamanlı piyasa verileri</p>
+      <h2 style="text-align:center;font-size:2.5rem;color:#667eea;margin-bottom:1rem;">Popüler Kripto Paralar</h2>
+      <p style="text-align:center;color:#666;margin-bottom:2rem;">Gerçek zamanlı piyasa verileri</p>
       <div class="cards-grid">
         <p style="text-align:center;color:#666;">Veriler yükleniyor...</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 CryptoHub. Tüm hakları saklıdır.</p>
+      <p>Bu site eğitim amaçlıdır. Yatırım tavsiyesi değildir.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function loadCryptoData() {
+      const container = document.querySelector('.cards-grid');
+      container.innerHTML = '<p style="text-align:center;color:#666;">Veriler yükleniyor...</p>';
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano');
+        const data = await res.json();
+
+        container.innerHTML = '';
+        data.forEach(c => {
+          const price = c.current_price;
+          const change = c.price_change_percentage_24h;
+          const positive = change >= 0;
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-icon"><img src="${c.image}" width="40" height="40" style="border-radius:50%"></div>
+            <h3>${c.name} (${c.symbol.toUpperCase()})</h3>
+            <div class="price">$${price.toLocaleString()}</div>
+            <span class="change ${positive ? 'positive' : 'negative'}">
+              ${positive ? '+' : ''}${change.toFixed(2)}%
+            </span>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p style="text-align:center;color:red;">Veri alınamadı. Yeniden deneyin.</p>';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadCryptoData);
+  </script>
+</body>
+</html>
