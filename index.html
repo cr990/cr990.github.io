@@ -62,8 +62,9 @@
 
   <script>
     async function loadData() {
+      const proxy = 'https://api.allorigins.win/raw?url=';
       const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,binancecoin,dogecoin';
-      const res = await fetch(url);
+      const res = await fetch(proxy + encodeURIComponent(url));
       const data = await res.json();
 
       const tbody = document.getElementById('crypto-table');
