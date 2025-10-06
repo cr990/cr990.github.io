@@ -1,207 +1,143 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CryptoHub - Kripto Portföy ve Fiyat Takip</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      transition: background 0.3s, color 0.3s;
-    }
-    header {
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.8rem;
-      font-weight: bold;
-      backdrop-filter: blur(10px);
-      background: rgba(30,41,59,0.8);
-    }
-    .theme-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #334155;
-      padding: 0.75rem;
-      text-align: center;
-    }
-    th {
-      background-color: #1e293b;
-    }
-    .up { color: #22c55e; }
-    .down { color: #ef4444; }
-    canvas {
-      background: #1e293b;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-    .portfolio {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: rgba(30,41,59,0.8);
-      border-radius: 8px;
-    }
-    input {
-      padding: 0.5rem;
-      margin: 0.3rem;
-      width: 120px;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
-      border: none;
-      border-radius: 8px;
-      background: #3b82f6;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #2563eb;
-    }
-    .light {
-      background: #f8fafc;
-      color: #0f172a;
-    }
-    .light header {
-      background: rgba(255,255,255,0.8);
-    }
-    .light th {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-    .light canvas {
-      background: #f1f5f9;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoHub - Kripto Para Dünyası</title>
+    <style>
+        /* --- SENİN TASARIMIN AYNISI KORUNUYOR --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo {
+            font-size: 1.8rem; font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #667eea; }
+        .hero { text-align: center; padding: 5rem 0; color: white; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.3rem; margin-bottom: 2rem; }
+        .cta-button {
+            background: white; color: #667eea; padding: 1rem 2.5rem;
+            border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .crypto-cards { background: white; padding: 4rem 0; }
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem; margin-top: 2rem;
+        }
+        .card {
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            border-radius: 15px; padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .card-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .card h3 { color: #667eea; margin-bottom: 0.5rem; }
+        .price { font-size: 1.5rem; font-weight: bold; color: #2ecc71; margin: 1rem 0; }
+        .change {
+            padding: 0.3rem 0.8rem; border-radius: 20px;
+            font-size: 0.9rem; font-weight: bold;
+        }
+        .positive { background: #d4edda; color: #155724; }
+        .negative { background: #f8d7da; color: #721c24; }
+        footer { background: #2c3e50; color: white; text-align: center; padding: 2rem 0; }
+    </style>
 </head>
 <body>
-  <header>
-    💹 CryptoHub
-    <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
-  </header>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">🚀 CryptoHub</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Ana Sayfa</a></li>
+                    <li><a href="#markets">Piyasalar</a></li>
+                    <li><a href="#calculator">Hesaplama</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <div class="container">
-    <h2>Canlı Kripto Fiyatları</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Coin</th>
-          <th>Fiyat (USD)</th>
-          <th>Değişim (24s)</th>
-        </tr>
-      </thead>
-      <tbody id="crypto-table">
-        <tr><td colspan="3">Veriler yükleniyor...</td></tr>
-      </tbody>
-    </table>
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Kripto Para Dünyasına Hoş Geldiniz</h1>
+            <p>Gerçek zamanlı fiyatlar ve analizlerle piyasayı takip edin.</p>
+            <button class="cta-button" onclick="document.getElementById('markets').scrollIntoView({behavior:'smooth'})">Keşfetmeye Başla</button>
+        </div>
+    </section>
 
-    <canvas id="chart" width="400" height="200"></canvas>
+    <section class="crypto-cards" id="markets">
+        <div class="container">
+            <h2 style="text-align:center; font-size:2.5rem; color:#667eea;">Popüler Kripto Paralar</h2>
+            <div class="cards-grid" id="crypto-container">
+                <p style="text-align:center;">Yükleniyor...</p>
+            </div>
+        </div>
+    </section>
 
-    <div class="portfolio">
-      <h3>Portföy Hesaplama</h3>
-      <p>Kripto miktarını gir, toplam değeri anında hesapla:</p>
-      <div id="inputs"></div>
-      <button onclick="calcPortfolio()">Toplamı Hesapla</button>
-      <h4 id="total"></h4>
-    </div>
-  </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CryptoHub. Tüm hakları saklıdır.</p>
+            <p>Bu site eğitim amaçlıdır. Yatırım tavsiyesi değildir.</p>
+        </div>
+    </footer>
 
-  <script>
-    const proxy = "https://api.allorigins.win/raw?url=";
-    const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,binancecoin,dogecoin";
-    let prices = {};
+    <script>
+        const apiURL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,cardano&vs_currencies=usd&include_24hr_change=true";
 
-    async function loadData() {
-      const res = await fetch(proxy + encodeURIComponent(url));
-      const data = await res.json();
+        async function loadPrices() {
+            const container = document.getElementById("crypto-container");
+            try {
+                const res = await fetch(apiURL);
+                const data = await res.json();
 
-      const tbody = document.getElementById("crypto-table");
-      tbody.innerHTML = "";
-      data.forEach(coin => {
-        prices[coin.id] = coin.current_price;
-        const change = coin.price_change_percentage_24h;
-        const row = `
-          <tr>
-            <td>${coin.name}</td>
-            <td>$${coin.current_price.toLocaleString()}</td>
-            <td class="${change >= 0 ? "up" : "down"}">${change.toFixed(2)}%</td>
-          </tr>`;
-        tbody.innerHTML += row;
-      });
+                const coins = [
+                    { name: "Bitcoin", symbol: "BTC", icon: "₿", key: "bitcoin" },
+                    { name: "Ethereum", symbol: "ETH", icon: "Ξ", key: "ethereum" },
+                    { name: "Solana", symbol: "SOL", icon: "◎", key: "solana" },
+                    { name: "Cardano", symbol: "ADA", icon: "₳", key: "cardano" }
+                ];
 
-      drawChart(data);
-      renderInputs(data);
-    }
+                container.innerHTML = coins.map(c => {
+                    const price = data[c.key].usd.toLocaleString();
+                    const change = data[c.key].usd_24h_change.toFixed(2);
+                    const changeClass = change >= 0 ? "positive" : "negative";
+                    const changeSymbol = change >= 0 ? "+" : "";
+                    return `
+                        <div class="card">
+                            <div class="card-icon">${c.icon}</div>
+                            <h3>${c.name} (${c.symbol})</h3>
+                            <p>${c.name} hakkında canlı piyasa verileri.</p>
+                            <div class="price">$${price}</div>
+                            <span class="change ${changeClass}">${changeSymbol}${change}%</span>
+                        </div>
+                    `;
+                }).join("");
+            } catch (e) {
+                container.innerHTML = "<p style='color:red; text-align:center;'>Veri alınamadı. Yeniden deneyin.</p>";
+            }
+        }
 
-    function drawChart(data) {
-      const ctx = document.getElementById("chart").getContext("2d");
-      const labels = data.map(c => c.name);
-      const values = data.map(c => c.current_price);
-      if (window.myChart) window.myChart.destroy();
-      window.myChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [{
-            label: "Fiyat (USD)",
-            data: values,
-            backgroundColor: ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6"]
-          }]
-        },
-        options: { plugins: { legend: { display: false } } }
-      });
-    }
-
-    function renderInputs(data) {
-      const div = document.getElementById("inputs");
-      div.innerHTML = "";
-      data.forEach(c => {
-        div.innerHTML += `
-          <div>
-            <label>${c.name}: </label>
-            <input id="${c.id}" type="number" placeholder="Miktar">
-          </div>`;
-      });
-    }
-
-    function calcPortfolio() {
-      let total = 0;
-      for (let id in prices) {
-        const val = parseFloat(document.getElementById(id)?.value || 0);
-        total += val * prices[id];
-      }
-      document.getElementById("total").innerText = "Toplam Değer: $" + total.toFixed(2);
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle("light");
-      const icon = document.querySelector(".theme-toggle");
-      icon.textContent = document.body.classList.contains("light") ? "🌞" : "🌙";
-    }
-
-    loadData();
-    setInterval(loadData, 60000);
-  </script>
+        loadPrices();
+        setInterval(loadPrices, 60000); // Her 1 dakikada bir yenile
+    </script>
 </body>
 </html>
