@@ -108,8 +108,8 @@
     const container = document.querySelector('.cards-grid');
     container.innerHTML = '<p style="text-align:center;color:#666;">Veriler yükleniyor...</p>';
     try {
-      const res = await fetch('https://corsproxy.io/?https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano');
-      const data = await res.json();
+      const res = await fetch('https://api.allorigins.win/raw?url=https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,cardano');
+
 
       container.innerHTML = '';
       data.forEach(c => {
